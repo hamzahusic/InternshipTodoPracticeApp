@@ -10,7 +10,6 @@ export default function HomePage() {
 
     const handleDelete = (id:string) => {
         const restOfProjects = deleteProjectById(id)
-        console.log(restOfProjects)
         setProjects(restOfProjects)
     } 
 

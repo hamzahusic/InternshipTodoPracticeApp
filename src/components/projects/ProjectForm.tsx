@@ -39,7 +39,13 @@ export default function ProjectForm(
                 <input
                     className="project-form__input"
                     placeholder="Enter project name"
-                    {...register("name", {required:true, minLength:1, maxLength:120})}
+                    {...register("name",
+                        {
+                         required:true,
+                         maxLength:120,
+                         validate: v => v.trim().length > 0,
+                        }
+                    )}
                 />
                 <button className="project-form__submit" type="submit">+ Add Project</button>
             </div>
