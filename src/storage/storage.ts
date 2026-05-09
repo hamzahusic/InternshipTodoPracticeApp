@@ -1,4 +1,4 @@
-import type { Project, Task } from "../types/type"
+import type { Project } from "../types/type"
 import { generateId } from "../utils/id"
 
 export function createProject(name:string) : Project & { id: string } {
