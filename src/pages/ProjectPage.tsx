@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { deleteCategory, deleteTask, getProjectById, onTaskCheck } from "../storage/storage";
+import { clearCompletedTasks, deleteCategory, deleteTask, getProjectById, markAllTasksCompleted, onTaskCheck } from "../storage/storage";
 import { useEffect, useState } from "react";
 import type { Project } from "../types/type";
 import CategoriesForm from "../components/tasks/CategoriesForm";
@@ -7,6 +7,7 @@ import CategoryButton from "../components/tasks/CategoryButton";
 import TaskForm from "../components/tasks/TaskForm";
 import TaskCard from "../components/tasks/TaskCard";
 import { parseDate } from "../utils/parseDate";
+import QuickActionButtons from "../components/tasks/QuickActionButtons";
 
 export default function ProjectPage() {
     
@@ -53,6 +54,18 @@ export default function ProjectPage() {
         setProject(updatedProject)
     }
 
+    const handleClearCompletedTasks = (projectId:string) => {
+        const updatedProject = clearCompletedTasks(projectId)
+
+        setProject(updatedProject)
+    }
+
+    const handleMarkAllTasksCompleted = (projectId:string) => {
+        const updatedProject = markAllTasksCompleted(projectId)
+
+        setProject(updatedProject)
+    }
+
     if(!project || !id) return;
 
     const categories = Object.keys(project?.categories ?? {})
@@ -68,7 +81,7 @@ export default function ProjectPage() {
                     Go back
                 </button>
                 <p>{project?.name}</p>
-                <span>Created at: {createdAt}</span>
+                <span>Created: {createdAt}</span>
             </div>
             <div>
                 <CategoriesForm projectId={id} setProject={setProject}/>
@@ -76,7 +89,8 @@ export default function ProjectPage() {
 
             <div className="filter-bar">
                 {categories.length > 0 ?
-                    <div>
+                    <div style={{ width: '100%' }}>
+                        <TaskForm projectId={id} categories={categories} project={project} setProject={setProject}/>
                         <div>
                             <button 
                             className={`filter-chip ${ selectedCategoryId === "All" && 'selected-filter-chip'}`}
@@ -94,7 +108,10 @@ export default function ProjectPage() {
                                 />
                             ))}
                         </div>
-                        <TaskForm projectId={id} categories={categories} project={project} setProject={setProject}/>
+                        <QuickActionButtons 
+                            handleClearCompletedTasks={() => handleClearCompletedTasks(id)}
+                            handleMarkAllTasksCompleted={() => handleMarkAllTasksCompleted(id)}
+                        />
                         <div className="task-list">
                             {categories
                                     .filter((

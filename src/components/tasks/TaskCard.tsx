@@ -24,7 +24,7 @@ export default function TaskCard(
   const date = parseDate(createdAt)
 
   return (
-    <div className={`task-card${completed ? " task-card--completed" : ""}`}>
+    <div className={`task-card ${completed ? " task-card--completed" : ""}`}>
       <input
         className="task-card__checkbox"
         type="checkbox"

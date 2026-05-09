@@ -1,4 +1,4 @@
-import type { Project } from "../types/type"
+import type { Project, Task } from "../types/type"
 import { generateId } from "../utils/id"
 
 export function createProject(name:string) : Project & { id: string } {
@@ -28,7 +28,7 @@ export function getProjects() : Record<string, Project>{
     return JSON.parse(localStorage.getItem("projects") ?? "{}")
 }
 
-export function getProjectById(id:string) : Project | undefined{
+export function getProjectById(id:string) : Project{
     const projects = getProjects()
     return projects[id]
 }
@@ -132,4 +132,58 @@ export function deleteTask(projectId:string, categoryId:string, taskId:string) :
     }))
 
     return projects[projectId]
+}
+
+export function clearCompletedTasks(project_id:string): Project{
+    const project = getProjectById(project_id)
+
+    // Object.keys(project.categories)
+    // .forEach((category_id) => {
+
+    //     const notFinishedTasks: Record<string, Task> = {}
+
+    //     Object.keys(project.categories[category_id].tasks)
+    //     .forEach((task_id) => {
+    //         if(project.categories[category_id].tasks[task_id].completed === false){
+    //             notFinishedTasks[task_id] = project.categories[category_id].tasks[task_id]
+    //         }
+    //     })
+
+    //     project.categories[category_id].tasks = notFinishedTasks
+
+    // })
+
+    for (const category of Object.values(project.categories)) {
+        category.tasks = Object.fromEntries(
+            Object.entries(category.tasks).filter(([, task]) => !task.completed)
+        )
+    }
+
+    const projects = getProjects()
+    projects[project_id] = project
+
+    localStorage.setItem("projects", JSON.stringify({
+        ...projects
+    }))
+
+    return project
+}
+
+export function markAllTasksCompleted(project_id:string): Project{
+    const project = getProjectById(project_id)
+
+    for (const category of Object.values(project.categories)) {
+        category.tasks = Object.fromEntries(
+            Object.entries(category.tasks).map(([key, task]) => [key, { ...task, completed: true }])
+        )
+    }
+
+    const projects = getProjects()
+    projects[project_id] = project
+
+    localStorage.setItem("projects", JSON.stringify({
+        ...projects
+    }))
+
+    return project
 }
