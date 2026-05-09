@@ -19,7 +19,7 @@ export default function CategoryButton(
         onClick={handleClick}
     >
         {content}
-        <img src="/bin.png" alt="Delete icon" width={25} onClick={handleDelete} />
+        <img src="/bin.png" alt="Delete icon" width={25} onClick={(e) => { e.stopPropagation(); handleDelete(); }} />
     </button>
   )
 }

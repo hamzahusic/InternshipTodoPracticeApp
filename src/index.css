@@ -363,3 +363,8 @@ body {
 .task-card__delete:hover {
   opacity: 1;
 }
+
+.task-form{
+  max-width: 350px;
+  width: 100%;
+}

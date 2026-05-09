@@ -36,6 +36,9 @@ export default function ProjectPage() {
         const updatedProject = deleteCategory(projectId, categoryId)
 
         setProject(updatedProject)
+        if(selectedCategoryId == categoryId){
+            setSelectedCategoryId("All")
+        }
     }
 
     const handleTaskCheck = (projectId:string, categoryId:string, taskId:string, checked:boolean) => {

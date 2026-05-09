@@ -48,7 +48,7 @@ export default function TaskForm(
 
 
     return (
-        <form className="project-form" onSubmit={handleSubmit(onSubmit)}>
+        <form className="project-form task-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="project-form__field">
                 <input
                     className="project-form__input"
