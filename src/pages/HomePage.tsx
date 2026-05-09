@@ -13,16 +13,18 @@ export default function HomePage() {
         setProjects(restOfProjects)
     } 
 
+    const projectList = Object.keys(projects)
+
     return (
         <div>
         <p id="title">Mini Jira</p>
 
         <ProjectForm setProjects = {setProjects}/>
 
-        { Object.keys(projects).length > 0 ? 
+        { projectList.length > 0 ? 
          
          <div className="projectCards">
-            {Object.keys(projects).map( (id, index) => (
+            {projectList.map( (id, index) => (
                 <ProjectCard id={id} name={projects[id].name} key={index} handleDelete={handleDelete}/>
             ))}
          </div>

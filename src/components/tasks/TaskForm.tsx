@@ -1,37 +1,49 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { Project } from "../../types/type";
-import { createProject } from "../../storage/storage";
+import { createTask } from "../../storage/storage";
 
 type Inputs = {
   title: string,
-  description: string
+  description: string,
+  category_id: string
+}
+
+interface TaskFormProps{
+    categories: string[],
+    project: Project,
+    projectId: string,
+    setProject :  React.Dispatch<React.SetStateAction<Project | null>>
 }
 
 export default function TaskForm(
-    {setTasks} : 
-    {setTasks : React.Dispatch<React.SetStateAction<Record<string, Project>>>}
-) {
+{
+    categories,
+    project,
+    projectId,
+    setProject
+}:TaskFormProps) {
 
     const {
         register,
         handleSubmit,
         resetField,
         formState: { errors },
-    } = useForm<Inputs>({ defaultValues: { name: "" } })
+    } = useForm<Inputs>({ defaultValues: { title: "", description: "", category_id: "" } })
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        const createdProject = createProject(data.name)
+        
+        const updatedProject = createTask(
+            projectId,
+            data.category_id,
+            data.title,
+            data.description
+        )
 
-        setProjects((prev) => (
-            {...prev, 
-            [createdProject.id] : {
-                "name" : createdProject.name,
-                "categories" : createdProject.categories,
-                "createdAt" : createdProject.createdAt
-            }}
-        ))
+        setProject(updatedProject)
 
-        resetField("name")
+        resetField("title")
+        resetField("description")
+        resetField("category_id")
     }
 
 
@@ -40,8 +52,8 @@ export default function TaskForm(
             <div className="project-form__field">
                 <input
                     className="project-form__input"
-                    placeholder="Enter project name"
-                    {...register("name",
+                    placeholder="Enter task title"
+                    {...register("title",
                         {
                          required:true,
                          maxLength:120,
@@ -49,9 +61,38 @@ export default function TaskForm(
                         }
                     )}
                 />
-                <button className="project-form__submit" type="submit">+ Add Project</button>
+                {errors.title && <span className="project-form__error">Please enter a valid task title</span>}
             </div>
-            {errors.name && <span className="project-form__error">Please enter a valid project name</span>}
+            <div className="project-form__field">
+                <input
+                    className="project-form__input"
+                    placeholder="Enter task description"
+                    {...register("description",
+                        {
+                         required:true,
+                         maxLength:120,
+                         validate: v => v.trim().length > 0,
+                        }
+                    )}
+                />
+                {errors.description && <span className="project-form__error">Please enter a valid task description</span>}
+            </div>
+            <div className="project-form__field">
+                <select
+                    className="project-form__input"
+                    {...register("category_id",
+                        {
+                         required:true}
+                    )}
+                >
+                 <option value="" disabled>Select a category</option>
+                 {categories.map((id) => (
+                    <option key={id} value={id}>{project.categories[id].name}</option>
+                 ))}
+                </select>
+                {errors.category_id && <span className="project-form__error">Please select category</span>}
+            </div>
+            <button className="project-form__submit" type="submit">+ Create task</button>
         </form>
     )
 }

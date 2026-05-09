@@ -74,3 +74,62 @@ export function deleteCategory(projectId:string,categoryId:string) :  Project{
 
     return projects[projectId]
 }
+
+export function createTask(projectId:string, categoryId:string, title:string, description:string ) :  Project{
+    const projects = getProjects()
+    const task_id = generateId(title)
+    const createdAt = new Date().toLocaleDateString()
+
+    projects[projectId]
+    .categories[categoryId]
+    .tasks[task_id] = {
+        "title": title,
+        "description": description,
+        "completed": false,
+        "createdAt" : createdAt
+    }
+
+    localStorage.setItem("projects", JSON.stringify({
+        ...projects
+    }))
+
+    return projects[projectId]
+}
+
+export function onTaskCheck(projectId:string, categoryId:string, taskId:string, checked:boolean) : Project{
+    const projects = getProjects()
+    const task = projects[projectId]
+        .categories[categoryId]
+        .tasks[taskId]
+
+    projects[projectId]
+    .categories[categoryId]
+    .tasks[taskId] = {
+        "title": task.title,
+        "description": task.description,
+        "completed": checked,
+        "createdAt" : task.createdAt
+    }
+
+    localStorage.setItem("projects", JSON.stringify({
+        ...projects
+    }))
+
+    return projects[projectId]
+}
+
+export function deleteTask(projectId:string, categoryId:string, taskId:string) : Project{
+    const projects = getProjects()
+
+    const {[taskId]:_, ...restOfTasks} = projects[projectId].categories[categoryId].tasks
+
+    projects[projectId]
+        .categories[categoryId]
+        .tasks = restOfTasks
+
+    localStorage.setItem("projects", JSON.stringify({
+        ...projects
+    }))
+
+    return projects[projectId]
+}
