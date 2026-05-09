@@ -2,7 +2,7 @@ export interface Task{
     title: string,
     description: string,
     completed: boolean,
-    createdAt: Date 
+    createdAt: string 
 }
 
 export interface Category {
@@ -12,5 +12,6 @@ export interface Category {
 
 export interface Project{
     name : string,
-    categories : Record<string, Category>
+    categories : Record<string, Category>,
+    createdAt: string
 }

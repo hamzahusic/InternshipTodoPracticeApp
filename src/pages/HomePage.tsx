@@ -2,7 +2,7 @@ import { useState } from "react";
 import ProjectForm from "../components/projects/ProjectForm";
 import { deleteProjectById, getProjects } from "../storage/storage";
 import ProjectCard from "../components/projects/ProjectCard";
-import NoProjectsCard from "../components/projects/NoProjectsCard";
+import EmptyListCard from "../components/common/EmptyListCard";
 
 export default function HomePage() {
 
@@ -27,7 +27,7 @@ export default function HomePage() {
             ))}
          </div>
 
-        : <NoProjectsCard/>}
+        : <EmptyListCard content="No projects added yet"/>}
 
         </div>
     )

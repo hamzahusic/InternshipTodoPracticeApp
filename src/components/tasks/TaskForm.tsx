@@ -3,12 +3,13 @@ import type { Project } from "../../types/type";
 import { createProject } from "../../storage/storage";
 
 type Inputs = {
-  name: string
+  title: string,
+  description: string
 }
 
-export default function ProjectForm(
-    {setProjects} : 
-    {setProjects : React.Dispatch<React.SetStateAction<Record<string, Project>>>}
+export default function TaskForm(
+    {setTasks} : 
+    {setTasks : React.Dispatch<React.SetStateAction<Record<string, Project>>>}
 ) {
 
     const {

@@ -1,14 +1,21 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { Project } from "../../types/type";
-import { createProject } from "../../storage/storage";
+import { createCategory } from "../../storage/storage";
 
 type Inputs = {
   name: string
 }
 
-export default function ProjectForm(
-    {setProjects} : 
-    {setProjects : React.Dispatch<React.SetStateAction<Record<string, Project>>>}
+interface CategoriesFormProps{
+    projectId : string
+    setProject : React.Dispatch<React.SetStateAction<Project | null>>
+}
+
+export default function CategoriesForm(
+    {
+        projectId, 
+        setProject
+    } : CategoriesFormProps
 ) {
 
     const {
@@ -19,17 +26,8 @@ export default function ProjectForm(
     } = useForm<Inputs>({ defaultValues: { name: "" } })
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        const createdProject = createProject(data.name)
-
-        setProjects((prev) => (
-            {...prev, 
-            [createdProject.id] : {
-                "name" : createdProject.name,
-                "categories" : createdProject.categories,
-                "createdAt" : createdProject.createdAt
-            }}
-        ))
-
+        const updatedProject = createCategory(projectId,data.name)
+        setProject(updatedProject)
         resetField("name")
     }
 
@@ -39,18 +37,18 @@ export default function ProjectForm(
             <div className="project-form__field">
                 <input
                     className="project-form__input"
-                    placeholder="Enter project name"
+                    placeholder="Enter category name"
                     {...register("name",
                         {
                          required:true,
-                         maxLength:120,
+                         maxLength:80,
                          validate: v => v.trim().length > 0,
                         }
                     )}
                 />
-                <button className="project-form__submit" type="submit">+ Add Project</button>
+                <button className="project-form__submit" type="submit">Create category</button>
             </div>
-            {errors.name && <span className="project-form__error">Please enter a valid project name</span>}
+            {errors.name && <span className="project-form__error">Please enter a valid category name</span>}
         </form>
     )
 }
